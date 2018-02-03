@@ -4,7 +4,7 @@ defmodule AccessPass.RefreshToken do
     applications valid refresh tokens.
   """
   @server_name :refresh_token
-    @doc """
+  @doc """
     will add a new refresh token and return a token object
     
   Returns `{
@@ -17,7 +17,7 @@ defmodule AccessPass.RefreshToken do
 
   ## Examples
 
-      iex> AccessPass.RefreshToken.add("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi",${},0)
+      AccessPass.RefreshToken.add("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi",${},0)
       {
         "type":"basic",
         "refresh_token":"MjNmYzgzNGMtMGM3MS00YTA4LTkxMWMtNDEyODU3Yzk2ZTgy",
@@ -30,20 +30,22 @@ defmodule AccessPass.RefreshToken do
   def add(unq_id, meta, revokeAt) do
     GenServer.call(@server_name, {:add, unq_id, meta, revokeAt})
   end
-@doc """
+
+  @doc """
   calling will revoke a given refresh token
 
   Returns `{:ok}`.
 
   ## Examples
 
-      iex> AccessPass.RefreshToken.revoke("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.RefreshToken.revoke("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {:ok}
 
   """
   def revoke(refresh_token) do
     GenServer.call(@server_name, {:revoke, refresh_token})
   end
+
   @doc """
   calling will refresh for a new access token
 
@@ -51,7 +53,7 @@ defmodule AccessPass.RefreshToken do
 
   ## Examples
 
-      iex> AccessPass.RefreshToken.refresh("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.RefreshToken.refresh("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {ok: "ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi"}
 
   """
@@ -59,7 +61,8 @@ defmodule AccessPass.RefreshToken do
   def refresh(refresh_token) do
     GenServer.call(@server_name, {:refresh, refresh_token})
   end
-  def revoke_self_only(access_token) do
-    GenServer.cast(@server_name, {:revoke, access_token})
+
+  def revoke_self_only(refresh_token) do
+    GenServer.cast(@server_name, {:revoke, refresh_token})
   end
 end

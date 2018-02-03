@@ -11,13 +11,14 @@ defmodule AccessPass.AccessToken do
 
   ## Examples
 
-      iex> AccessPass.AccessToken.add("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi",${})
+      AccessPass.AccessToken.add("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi",${})
       "ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi"
 
   """
   def add(refresh_token, meta) do
     GenServer.call(@server_name, {:add, refresh_token, meta})
   end
+
   @doc """
   calling will revoke a given access token
 
@@ -25,7 +26,7 @@ defmodule AccessPass.AccessToken do
 
   ## Examples
 
-      iex> AccessPass.AccessToken.revoke("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.AccessToken.revoke("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {:ok}
 
   """
@@ -40,7 +41,7 @@ defmodule AccessPass.AccessToken do
 
   ## Examples
 
-      iex> AccessPass.AccessToken.check("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.AccessToken.check("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {ok: {metadata: "hi"}}
 
   """
@@ -48,7 +49,7 @@ defmodule AccessPass.AccessToken do
     AccessPass.AccessTokenServer.check(access_token)
   end
 
-  def revoke_self_only(access_token) do
-    GenServer.cast(@server_name, {:revoke, access_token})
+  def revoke_self_only(refresh_token) do
+    GenServer.cast(@server_name, {:revoke, refresh_token})
   end
 end

@@ -5,31 +5,33 @@ defmodule AccessPass do
   """
   alias AccessPass.GateKeeper
   # maybe validate password === password confirm
-    @doc """
+  @doc """
   Checks if the given access token is not revoked or expired and returns the data stored for it
 
   Returns `{:ok,{user: "data"}}`.
 
   ## Examples
 
-      iex> AccessPass.logged?("ODhhMDgzYjctZTE3OC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.logged?("ODhhMDgzYjctZTE3OC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {:ok, {username: "jordiee"}}
 
   """
   defdelegate logged?(token), to: GateKeeper, as: :check
-      @doc """
+
+  @doc """
   Refresh for a new access_token given a refresh_token
 
   Returns `{:ok,"access_token"}`.
 
   ## Examples
 
-      iex> AccessPass.refresh("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.refresh("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {:ok, "ODhhMDgzYjctZTE3OC00YjgyLWFiZGMtZTJjOWZiMzJjODhi"}
 
   """
   defdelegate refresh(refresh_token), to: GateKeeper, as: :refresh
-      @doc """
+
+  @doc """
     Register a new user
 
   Returns `{"ok":
@@ -44,7 +46,7 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.register(%{
+      AccessPass.register(%{
         username: "example",
         password: "otherexample",
         email: "example@email.com",
@@ -63,6 +65,7 @@ defmodule AccessPass do
       }
   """
   defdelegate register(user_obj), to: GateKeeper, as: :register
+
   @doc """
   Marks a user email confirmed based on the given confirm_id
 
@@ -70,11 +73,12 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.confirm("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.confirm("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {:ok, "email confirmed"}
   """
   defdelegate confirm(confirm_id), to: GateKeeper, as: :confirm
-        @doc """
+
+  @doc """
     Register a new user
 
   Returns `{"ok":
@@ -89,7 +93,7 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.login(%{
+      AccessPass.login(%{
         username: "example",
         password: "otherexample",
       })
@@ -105,6 +109,7 @@ defmodule AccessPass do
   """
 
   defdelegate login(username, password), to: GateKeeper, as: :log_in
+
   @doc """
   calling will set a reset password email to the linked email account of the username
 
@@ -112,11 +117,12 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.reset_password("jordiee")
+      AccessPass.reset_password("jordiee")
       {ok: "password reset sent to accounts email"}
 
   """
   defdelegate reset_password(username), to: GateKeeper, as: :reset_password
+
   @doc """
   calling will send a forgot_username email to the email(if it exists in system)
 
@@ -124,11 +130,12 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.forgot_username("myemail@gmail.com")
+      AccessPass.forgot_username("myemail@gmail.com")
       {ok: "sent email with related username"}
 
   """
   defdelegate forgot_username(email), to: GateKeeper, as: :forgot_username
+
   @doc """
   calling logout will revoke both access_token and refresh_token for the given access_token
 
@@ -136,11 +143,12 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.logout("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
+      AccessPass.logout("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi")
       {:ok}
 
   """
   defdelegate logout(access_token), to: GateKeeper, as: :log_out
+
   @doc """
   Calling will update user password for related password_id
 
@@ -148,7 +156,7 @@ defmodule AccessPass do
 
   ## Examples
 
-      iex> AccessPass.change_password("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi","myNewPassword")
+      AccessPass.change_password("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi","myNewPassword")
       {:ok}
 
   """

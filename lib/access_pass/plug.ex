@@ -1,10 +1,11 @@
 defmodule AccessPass.Auth do
-   @moduledoc """
+  @moduledoc """
    Plug that checks for access_token in header and then checks if its expired or revoked.
    If it's not it adds the stored data from the token in meta.
    If it is then it returns 401 unauthorized and halts the plug. 
   """
   import Plug.Conn
+
   def init(opts \\ %{}) do
     opts
   end

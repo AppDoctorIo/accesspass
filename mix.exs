@@ -5,17 +5,19 @@ defmodule AccessPass.Mixfile do
     [
       app: :access_pass,
       name: "AccessPass",
-      docs: [main: "introduction",
-             extras: ["doc_extras/introduction.md",
-                      "doc_extras/getting_started.md",
-                      "doc_extras/configuration_options.md",
-                      "doc_extras/phoenix_routes_helper.md",
-                      "doc_extras/email_template.md",
-                      "doc_extras/plugs.md",
-                      ],
-             groups_for_extras: [
-                "Crash Course": Path.wildcard("doc_extras/*.md")             
-             ]         
+      docs: [
+        main: "introduction",
+        extras: [
+          "doc_extras/introduction.md",
+          "doc_extras/getting_started.md",
+          "doc_extras/configuration_options.md",
+          "doc_extras/phoenix_routes_helper.md",
+          "doc_extras/email_template.md",
+          "doc_extras/plugs.md"
+        ],
+        groups_for_extras: [
+          "Crash Course": Path.wildcard("doc_extras/*.md")
+        ]
       ],
       version: "0.1.6",
       description:

@@ -32,7 +32,7 @@ defmodule AccessPass.Config do
   def unquote(:refresh_expire_in)() do
     Application.get_env(:access_pass, unquote(:refresh_expire_in)) || 0
   end
-  
+
   def unquote(:access_expire_in)() do
     Application.get_env(:access_pass, unquote(:access_expire_in)) || 300
   end
