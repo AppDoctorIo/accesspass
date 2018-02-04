@@ -43,6 +43,7 @@ defmodule AccessPass.RefreshTokenServer do
     Process.send_after(@name, {:revoke, refresh}, revokeAt * 1000)
     {:reply, GateKeeper.formatTokens(refresh, new_access_token, revokeAt), %{}}
   end
+
   def handle_call({:add, uniq, meta, revokeAt}, _from, %{}) do
     {:reply, {:error, "invalid type for revokeAt"}, %{}}
   end
@@ -68,7 +69,6 @@ defmodule AccessPass.RefreshTokenServer do
   end
 
   def handle_cast({:revoke, refresh_token}, %{}) do
-    IO.inspect(refresh_token)
     :ets.match_delete(@ets, {:_, refresh_token, :_, :_})
     {:noreply, %{}}
   end
