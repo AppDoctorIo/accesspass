@@ -82,7 +82,7 @@ defmodule AccessPass.GateKeeper do
 
   def log_in(username, password) do
     case login(username, password) do
-      {:ok, user} -> {:ok, RefreshToken.add(user.id, user.meta, refresh_expire_in())}
+      {:ok, user} -> {:ok, RefreshToken.add(user.id, %{username: user.username, meta: user.meta}, refresh_expire_in())}
       {:error} -> {:error, "username or password is incorrect"}
     end
   end

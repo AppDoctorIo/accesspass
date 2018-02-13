@@ -14,7 +14,7 @@ defmodule AccessPass.Auth do
     token = conn |> getHeaderValue("access_token")
 
     case AccessPass.logged?(token) do
-      {:ok, meta} -> conn |> assign(:meta, meta)
+      {:ok, data} -> conn |> assign(:data, data)
       {:error, _} -> conn |> send_resp(401, "unauthorized") |> halt()
     end
   end
