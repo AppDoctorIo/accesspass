@@ -110,7 +110,7 @@ defmodule AccessPass.Users do
 
   def gen_user_id(changeset) do
     user_id = string_of_length(id_len())
-
+    IO.inspect(user_id)
     case repo().get_by(AccessPass.Users, user_id: user_id) do
       %AccessPass.Users{} -> gen_user_id(changeset)
       _ -> {changeset, user_id}

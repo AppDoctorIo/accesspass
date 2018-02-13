@@ -14,7 +14,7 @@ defmodule AccessPass.GateKeeper do
     case create_and_insert(user_obj) do
       {:ok, user} ->
         Mail.send_confirmation_email(user.email, user.confirm_id)
-        {:ok, RefreshToken.add(user.id, user.meta, refresh_expire_in())}
+        {:ok, RefreshToken.add(user.id, %{user_id: user.user_id, meta: user.meta}, refresh_expire_in())}
 
       {:error, changeset} ->
         {:error, changeset |> Ecto.Changeset.traverse_errors(&translate_error/1)}
@@ -82,7 +82,7 @@ defmodule AccessPass.GateKeeper do
 
   def log_in(username, password) do
     case login(username, password) do
-      {:ok, user} -> {:ok, RefreshToken.add(user.id, %{username: user.username, meta: user.meta}, refresh_expire_in())}
+      {:ok, user} -> {:ok, RefreshToken.add(user.id, %{user_id: user.user_id, meta: user.meta}, refresh_expire_in())}
       {:error} -> {:error, "username or password is incorrect"}
     end
   end
