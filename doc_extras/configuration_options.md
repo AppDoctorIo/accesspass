@@ -10,6 +10,8 @@
 
 <b>id\_gen\_mod</b>: Points to a Module that contains an gen\_user\_id(changeset) function
 
+<b>custom\_change\_mod</b>: Points to a Module that contains an custom(changeset) function. This function runs at the very end of the changeset pipeline on user registration giving you the option to change anything in the changeset before db insert. Must return a changeset.
+
 <b>refresh\_expire\_in</b>: time in seconds to expire each refresh token
 
 <b>access\_expire\_in</b>: time in seconds to expire access token
@@ -41,6 +43,7 @@ config :access_pass,
         password_reset_template: {Test.Temps, :reset_template, []},      #check Email Templating
         forgot_username_template: {Test.Temp, :forgot_user_template, []},#check Email Templating
         id_gen_mod: Test.Gen, #Needs to have gen_user_id(changeset) and return {changeset, ID}
+        custom_change_mod: Test.Gen, #Needs to have custom(changeset) and return changeset
         refresh_expire_in: 3600, #(1hour) defaults to 0(no expire)
         access_expire_in: 600, #(10 minutes) defaults to 300(5 minutes)
         id_len: 12, # defaults to 6 

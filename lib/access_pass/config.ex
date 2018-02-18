@@ -24,7 +24,9 @@ defmodule AccessPass.Config do
         {AccessPass.EmailTemplates, :forgot_username, []}
     )
   end
-
+  def unquote(:custom_change)() do
+    Application.get_env(:access_pass, unquote(:custom_change_mod)) || AccessPass.Users
+  end
   def unquote(:id_gen)() do
     Application.get_env(:access_pass, unquote(:id_gen_mod)) || AccessPass.Users
   end

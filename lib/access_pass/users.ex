@@ -47,6 +47,7 @@ defmodule AccessPass.Users do
     |> unique_constraint(:user_id)
     |> unique_constraint(:username)
     |> add_hash
+    |> custom_change().custom()
   end
 
   def update_password(changeset, params) do
@@ -102,6 +103,10 @@ defmodule AccessPass.Users do
 
   def gen_confirmed_id(changeset) do
     changeset |> put_change(:confirm_id, genId())
+  end
+
+  def custom(changeset) do
+    changeset
   end
 
   def put_user_id({changeset, user_id}) do
