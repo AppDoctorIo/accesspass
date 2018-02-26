@@ -22,11 +22,6 @@ defmodule AccessPass.AccessTokenServer do
     {:reply, access_token, %{}}
   end
 
-  def handle_info({:revoke, access_token}, _) do
-    :ets.delete(@ets, access_token)
-    {:noreply, %{}}
-  end
-
   def handle_call({:revoke, access_token}, _, _) do
     case :ets.match(@ets, {access_token, :"$1", :_}) do
       [[val]] -> RefreshToken.revoke_self_only(val)
@@ -37,6 +32,11 @@ defmodule AccessPass.AccessTokenServer do
     {:reply, {:ok}, %{}}
   end
 
+  def handle_info({:revoke, access_token}, _) do
+    :ets.delete(@ets, access_token)
+    {:noreply, %{}}
+  end
+  
   def handle_cast({:revoke, refresh_token}, %{}) do
     :ets.match_delete(@ets, {:_, refresh_token, :_})
     {:noreply, %{}}

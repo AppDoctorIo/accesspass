@@ -6,9 +6,8 @@ defmodule AccessPass.Users do
   import Ecto.Changeset
   alias AccessPass.GateKeeper
   import AccessPass.Config
-
+  @primary_key {:user_id, :string, autogenerate: false}
   schema "users" do
-    field(:user_id, :string)
     field(:username, :string)
     field(:meta, :map, default: %{})
     field(:email, :string)
@@ -115,7 +114,7 @@ defmodule AccessPass.Users do
 
   def gen_user_id(changeset) do
     user_id = string_of_length(id_len())
-    case repo().get_by(AccessPass.Users, user_id: user_id) do
+    case repo().get(AccessPass.Users, user_id) do
       %AccessPass.Users{} -> gen_user_id(changeset)
       _ -> {changeset, user_id}
     end

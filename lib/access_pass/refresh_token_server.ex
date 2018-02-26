@@ -24,7 +24,7 @@ defmodule AccessPass.RefreshTokenServer do
         :ets.insert(@ets, {uniq, refresh, access, meta})
         {:reply, {:ok, access}, %{}}
 
-      obj ->
+      _ ->
         {:reply, {:error, "error getting token data"}, %{}}
     end
   end
@@ -44,13 +44,13 @@ defmodule AccessPass.RefreshTokenServer do
     {:reply, GateKeeper.formatTokens(refresh, new_access_token, revokeAt), %{}}
   end
 
-  def handle_call({:add, uniq, meta, revokeAt}, _from, %{}) do
+  def handle_call({:add, _, _, _}, _from, %{}) do
     {:reply, {:error, "invalid type for revokeAt"}, %{}}
   end
 
   def handle_call({:revoke, refresh_token}, _from, %{}) do
     case :ets.match(@ets, {:_, refresh_token, :"$1", :_}) do
-      [[val]] -> AccessToken.revoke_self_only(refresh_token)
+      [[_]] -> AccessToken.revoke_self_only(refresh_token)
       _ -> :ok
     end
 
@@ -60,7 +60,7 @@ defmodule AccessPass.RefreshTokenServer do
 
   def handle_info({:revoke, refresh_token}, %{}) do
     case :ets.match(@ets, {:_, refresh_token, :"$1", :_}) do
-      [[val]] -> AccessToken.revoke_self_only(refresh_token)
+      [[_]] -> AccessToken.revoke_self_only(refresh_token)
       _ -> :ok
     end
 
