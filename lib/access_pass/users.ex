@@ -107,6 +107,9 @@ defmodule AccessPass.Users do
   def custom(changeset) do
     changeset
   end
+  def after_insert(changeset) do
+    changeset
+  end
 
   def put_user_id({changeset, user_id}) do
     changeset |> put_change(:user_id, user_id)

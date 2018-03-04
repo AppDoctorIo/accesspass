@@ -117,9 +117,12 @@ defmodule AccessPass.GateKeeper do
 
   # Private functions
   # ===================================================== 
+  def insert_override(changeset) do
+    repo().insert(changeset)
+  end
   defp create_and_insert(user_obj) do
     Users.create_user_changeset(user_obj)
-    |> repo().insert()
+    |> insert_override().insert_override() |> after_insert().after_insert()
   end
 
   defp return_from_conf({:ok, _}) do

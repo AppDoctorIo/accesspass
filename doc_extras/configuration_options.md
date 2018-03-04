@@ -12,6 +12,10 @@
 
 <b>custom\_change\_mod</b>: Points to a Module that contains an custom(changeset) function. This function runs at the very end of the changeset pipeline on user registration giving you the option to change anything in the changeset before db insert. Must return a changeset.
 
+<b> insert\_override\_mod </b>: Points to a Module that contains an insert_override(changeset) function. This can be used to wrap the insert of a user in a transaction with some other inserts. You should at some point attempt to insert the user changeset in this function and return the results of that insert. Expects the same type of results from a normal Repo.insert(cs)...ie {:ok, cs} or {:error, cs} returned
+
+<b>after\_insert\_mod </b>: Points to a Module that contains an after_insert(insert_result) function. This can be used for stuff like logging or adding the user to an internal cache. it is passed a standard Repo.insert return and should pass a result that matches what it was passed. Make sure to handle both a Repo.failed insert({:error, cs}) and a Repo.passed insert({:ok,cs})
+
 <b>refresh\_expire\_in</b>: time in seconds to expire each refresh token
 
 <b>access\_expire\_in</b>: time in seconds to expire access token
@@ -44,6 +48,8 @@ config :access_pass,
         forgot_username_template: {Test.Temp, :forgot_user_template, []},#check Email Templating
         id_gen_mod: Test.Gen, #Needs to have gen_user_id(changeset) and return {changeset, ID}
         custom_change_mod: Test.Gen, #Needs to have custom(changeset) and return changeset
+        insert_override_mod: Test.Gen, #Needs to have insert_override(changeset) and return {:ok, changeset} or {:error, changeset}
+        after_insert_mod: Test.Gen, #Needs to have after_insert({:error,cs} OR {:ok,cs}) and return changeset
         refresh_expire_in: 3600, #(1hour) defaults to 0(no expire)
         access_expire_in: 600, #(10 minutes) defaults to 300(5 minutes)
         id_len: 12, # defaults to 6 
