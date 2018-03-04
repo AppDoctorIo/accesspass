@@ -5,7 +5,7 @@ The idea behind AccessPass was to have a very quick setup and have a full implem
 
 add the following to your deps:
 ```elixir
-{:access_pass, "~> 0.1.6"}
+{:access_pass, "~> 0.3.3"}
 ```
 
 <b>NOTE:</b>
