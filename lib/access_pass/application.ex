@@ -10,7 +10,7 @@ defmodule AccessPass.Application do
 
     # Define workers and child supervisors to be supervised
       if(Application.get_env(:access_pass, :sync) == true) do
-        SyncM.start();
+        SyncM.start()
       end
     children =
       if Application.get_env(:access_pass, :repo) == nil do

@@ -31,14 +31,13 @@ defmodule AccessPass.RefreshTokenServer do
         insert(@ets, {uniq, refresh, access, meta})
         {:reply, {:ok, access}, %{}}
 
-      _ ->
-        {:reply, {:error, "error getting token data"}, %{}}
+      e -> {:reply, {:error, "error getting token data"}, %{}}
     end
   end
 
   def handle_call({:add, uniq, meta, 0}, _from, %{}) do
     refresh = GateKeeper.genToken()
-    new_access_token = AccessPass.AccessToken.add(refresh, meta)
+    new_access_token = AccessPass.AccessToken.add(refresh, meta) 
     insert(@ets, {uniq, refresh, new_access_token, meta})
     {:reply, GateKeeper.formatTokens(refresh, new_access_token, 0), %{}}
   end

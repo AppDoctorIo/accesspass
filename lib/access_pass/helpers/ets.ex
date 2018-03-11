@@ -12,6 +12,7 @@ defmodule AccessPass.Ets do
 		:ets.match_delete(name, obj)
 	end
 	def match(name,obj) do
+		IO.inspect(obj)
 		:ets.match(name, obj)
 	end
 	def new(name,opts) do

@@ -1,21 +1,34 @@
 defmodule AccessPass.Mnesia do
   alias :mnesia, as: Mnesia
 	def insert(name, obj) do
-		create = fn -> Mnesia.write(smoosh(name,obj)) end
-    case Mnesia.transaction(create) do
-      {:atomic, :ok} -> :ok
-      _ -> IO.inspect("Something went wrong creating account in Mnesia cache")
-    end
+		val = smoosh(name,obj)
+   	(:ok == run_trans(fn -> Mnesia.write(val) end))
 	end
 	def match_object(name,obj) do
-		Mnesia.match_object(smoosh(name,obj))
+		val = smoosh(name,obj)
+		run_trans(fn -> Mnesia.match_object(val) end) |> Enum.map(&strip_name/1)
+	end
+	def delete(name,key) do
+		val = smoosh(name,key)
+		run_trans(fn -> Mnesia.delete(val) end)
+	end
+	def match_delete(name,obj) do
+		val = smoosh(name,obj)
+		run_trans(fn -> Mnesia.match_object(val) end)
+			|> delete_by_key
+	end
+	def match(name,{access_token, :"$1", :_} = pat) do
+		match_object(name,pat) 
+		|> Enum.map(fn({access,refresh,meta}) -> [refresh] end) 
 	end
 
-	def match_delete(name,obj) do
-		# need to match and then loop delete, ez
+	def match(name,{access_token, :_, :"$1"} = pat) do
+		match_object(name,pat) 
+		|> Enum.map(fn({access,refresh,meta}) -> [meta] end)
 	end
-	def match(name,obj) do
-		# need to match and then delete access keys
+	def match(name,{:_, refresh_token, :"$1", :_} = pat) do
+		match_object(name,pat) 
+		|> Enum.map(fn({one,two,three,four}) -> [three] end)
 	end
 
 	def new(:refresh_token_ets = name,_) do
@@ -30,7 +43,31 @@ defmodule AccessPass.Mnesia do
 			false -> 	SyncM.add_table(name,[:access, :refresh, :meta])
 		end
 	end
-	def smoosh(val, tup) do
+	defp delete_by_key([h|t]) do
+		local_list = Tuple.to_list(h)
+		var = smoosh(Enum.at(local_list,0),{Enum.at(local_list,1)})
+		run_trans(fn -> 
+			Mnesia.delete(var)
+			end)
+		delete_by_key(t)
+	end
+	defp delete_by_key([]) do
+		:ok	
+	end
+	def strip_name(tup) do
+			[h|t] = Tuple.to_list(tup)
+			List.to_tuple(t)
+	end
+	def smoosh(val, tup) when is_tuple(tup) do
 		[val | Tuple.to_list(tup)] |> List.to_tuple()
+	end
+	def smoosh(val, tup) do
+		[val | Tuple.to_list({tup})] |> List.to_tuple()
+	end
+	defp run_trans(fnc) do
+		case Mnesia.transaction(fnc) do
+      {:atomic, val} -> val 
+      v -> :error
+    end
 	end
 end
