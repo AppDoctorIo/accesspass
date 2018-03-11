@@ -9,6 +9,9 @@ defmodule AccessPass.Application do
     import Supervisor.Spec, warn: false
 
     # Define workers and child supervisors to be supervised
+      if(Application.get_env(:access_pass, :sync) == true) do
+        SyncM.start();
+      end
     children =
       if Application.get_env(:access_pass, :repo) == nil do
         [
