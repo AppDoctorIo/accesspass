@@ -39,6 +39,7 @@ defmodule AccessPass.Users do
     |> put_user_id
     |> gen_confirmed_id
     |> validate_email
+    |> validate_required([:username, :email,:password])
     |> validate_length(:username, min: 3, max: 36)
     |> validate_length(:email, min: 3, max: 256)
     |> validate_length(:password, min: 6)

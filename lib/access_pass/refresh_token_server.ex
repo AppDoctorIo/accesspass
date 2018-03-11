@@ -1,11 +1,9 @@
 defmodule AccessPass.RefreshTokenServer do
   @moduledoc false
   use GenServer
-  # if(Application.get_env(:access_pass, :distributed) == true) do
-  #   import AccessPass.Mnesia
-  # else
+  
   import AccessPass.Importer
-  # end
+
   @name :refresh_token
   @ets :refresh_token_ets
   alias AccessPass.{GateKeeper, AccessToken}
@@ -15,8 +13,6 @@ defmodule AccessPass.RefreshTokenServer do
   end
 
   def init(state) do
-    # check :mnesia.system_inf(:tables) to make sure RefreshTokenEts does not already exist
-    # SyncM.add_table(RefreshTokenEts, [:uniq, :refresh, :access, :meta])
     new(@ets, [:set, :protected, :named_table])
     {:ok, state}
   end
