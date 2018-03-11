@@ -15,7 +15,6 @@ defmodule AccessPass.Ets do
 		:ets.match(name, obj)
 	end
 	def new(name,opts) do
-		IO.inspect({name,opts})
 		:ets.new(name, opts)
 	end
 end
