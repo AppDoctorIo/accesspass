@@ -4,6 +4,10 @@
 
 <b>confirmation\_template</b>: a mfa tuple that returns html to use when sending confirmation emails.
 
+<b>distributed</b>: a boolean that will decide on using ets or mnesia depending on if you want access_pass to work across servers.
+
+<b>sync</b>: a boolean that will use SyncM if true to start up a mnesia sync across nodes so new joined nodes will automatically copy access_pass tokens tables. Use if you want access_pass to start mnesia for you. If you application already has it running I reccomend looking at SyncM for auto node syncing.
+
 <b>password\_reset\_template</b>: a mfa tuple that returns html to use when sending password reset email
 
 <b>forgot\_username\_template</b>: a mfa tuple that returns html to use when sending forgot username email
@@ -39,7 +43,9 @@
 ```elixir
 #Example configuration with every option
 config :access_pass, 
-        repo: Test.Repo,                                         #Required if already using ecto
+        repo: Test.Repo,
+        distributed: true,
+        sync: true,                                         #Required if already using ecto
         mailgun_domain: "https://api.mailgun.net/v3/YOURDOMAIN", #Required
         mailgun_key:    "key-YOURKEY",                           #Required
         from: YOUREMAIL@example.com,                             #Required
