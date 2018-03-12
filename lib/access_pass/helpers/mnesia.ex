@@ -17,18 +17,18 @@ defmodule AccessPass.Mnesia do
 		run_trans(fn -> Mnesia.match_object(val) end)
 			|> delete_by_key
 	end
-	def match(name,{access_token, :"$1", :_} = pat) do
+	def match(name,{_, :"$1", :_} = pat) do
 		match_object(name,pat) 
-		|> Enum.map(fn({access,refresh,meta}) -> [refresh] end) 
+		|> Enum.map(fn({_,refresh,_}) -> [refresh] end) 
 	end
 
-	def match(name,{access_token, :_, :"$1"} = pat) do
+	def match(name,{_, :_, :"$1"} = pat) do
 		match_object(name,pat) 
-		|> Enum.map(fn({access,refresh,meta}) -> [meta] end)
+		|> Enum.map(fn({_,_,meta}) -> [meta] end)
 	end
-	def match(name,{:_, refresh_token, :"$1", :_} = pat) do
+	def match(name,{:_, _, :"$1", :_} = pat) do
 		match_object(name,pat) 
-		|> Enum.map(fn({one,two,three,four}) -> [three] end)
+		|> Enum.map(fn({_,_,three,_}) -> [three] end)
 	end
 
 	def new(:refresh_token_ets = name,_) do
@@ -55,7 +55,7 @@ defmodule AccessPass.Mnesia do
 		:ok	
 	end
 	def strip_name(tup) do
-			[h|t] = Tuple.to_list(tup)
+			[_|t] = Tuple.to_list(tup)
 			List.to_tuple(t)
 	end
 	def smoosh(val, tup) when is_tuple(tup) do
@@ -67,7 +67,7 @@ defmodule AccessPass.Mnesia do
 	defp run_trans(fnc) do
 		case Mnesia.transaction(fnc) do
       {:atomic, val} -> val 
-      v -> :error
+      _ -> :error
     end
 	end
 end

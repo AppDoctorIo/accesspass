@@ -27,7 +27,7 @@ defmodule AccessPass.RefreshTokenServer do
         insert(@ets, {uniq, refresh, access, meta})
         {:reply, {:ok, access}, %{}}
 
-      e -> {:reply, {:error, "error getting token data"}, %{}}
+      _ -> {:reply, {:error, "error getting token data"}, %{}}
     end
   end
 
