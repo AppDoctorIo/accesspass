@@ -32,13 +32,13 @@ defmodule AccessPass.Mnesia do
 	end
 
 	def new(:refresh_token_ets = name,_) do
-		case Enum.member?(:mnesia.system_info(:tables),:jordan1) do
+		case Enum.member?(:mnesia.system_info(:tables),:refresh_token_ets) do
 			true ->	nil	
 			false -> 	SyncM.add_table(name,[:uniq, :refresh, :access, :meta])
 		end	
 	end
 	def new(:access_token_ets = name,_) do
-		case Enum.member?(:mnesia.system_info(:tables),:jordan1) do
+		case Enum.member?(:mnesia.system_info(:tables),:access_token_ets) do
 			true ->	nil	
 			false -> 	SyncM.add_table(name,[:access, :refresh, :meta])
 		end
