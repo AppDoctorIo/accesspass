@@ -15,5 +15,5 @@
   "poison": {:hex, :poison, "1.5.2", "560bdfb7449e3ddd23a096929fb9fc2122f709bcc758b2d5d5a5c7d0ea848910", [], [], "hexpm"},
   "poolboy": {:hex, :poolboy, "1.5.1", "6b46163901cfd0a1b43d692657ed9d7e599853b3b21b95ae5ae0a777cf9b6ca8", [], [], "hexpm"},
   "postgrex": {:hex, :postgrex, "0.12.2", "13cfd784a148da78f0edddd433bcef5c98388fdb2963ba25ed1fa7265885e6bf", [], [{:connection, "~> 1.0", [hex: :connection, repo: "hexpm", optional: false]}, {:db_connection, "~> 1.0", [hex: :db_connection, repo: "hexpm", optional: false]}, {:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: false]}], "hexpm"},
-  "sync_m": {:hex, :sync_m, "0.1.0", "33353f25848eb655d786c8e9f99788729c0cb080b613fa34f4d5aaf869e9b1f3", [], [], "hexpm"},
+  "sync_m": {:hex, :sync_m, "0.1.1", "04326618cc7524757801c397f7b6561f59b6e93754f22ae0be677672c2a4c158", [], [], "hexpm"},
 }
