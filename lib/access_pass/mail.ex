@@ -21,7 +21,6 @@ defmodule AccessPass.Mail do
   def send_forgot_username_email(to, user_name) do
     body = forgot_username()
     templated_body = EEx.eval_string(body, user_name: user_name)
-    IO.inspect(templated_body)
     send_mail(to, from(), forgot_username_subject(), templated_body)
   end
 
