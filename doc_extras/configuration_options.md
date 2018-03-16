@@ -34,14 +34,16 @@
 
 <b>forgot\_username_subject</b>: string to override forgot username subject line of email.
 
-<b>mailgun\_domain</b>: string domain for mailgun account.
+<b>bamboo email configs</b>: look [here](https://hexdocs.pm/bamboo/readme.html) for the configs needed. These configs go under config :access_pass, AccessPass.Mailer
 
-<b>mailgun_key</b>: string for mailgun account key.
-
-<b>ecto configurations</b> If you want AccessPass to house your instance of Ecto as compared to providing repo: above then check out the getting started section for an example config.
+<b>ecto configurations</b>: If you want AccessPass to house your instance of Ecto as compared to providing repo: above then check out the getting started section for an example config.
 
 ```elixir
 #Example configuration with every option
+config :access_pass, AccessPass.Mailer,
+  adapter: Bamboo.PICKANDADAPTER,
+ #Please look at the configs from bamboo hex page for what the required configs are. 
+
 config :access_pass, 
         repo: Test.Repo,
         distributed: true,

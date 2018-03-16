@@ -36,7 +36,7 @@ defmodule AccessPass.GateKeeper do
 
       %AccessPass.Users{} = user ->
         case Mail.send_forgot_username_email(user.email, user.username) do
-          {:ok, _} -> {:ok, "sent email with related username"}
+          %Bamboo.Email{} -> {:ok, "sent email with related username"}
           {:error, _} -> {:error, "error sending email"}
         end
     end
@@ -72,7 +72,7 @@ defmodule AccessPass.GateKeeper do
                Users.update_key(user, :password_reset_key, password_key)
                |> Users.update_key(:password_reset_expire, timeNowInUnix() + 2 * 60 * 60),
              {:ok, _} <- repo().update(usr),
-             {:ok, _} <- Mail.send_password_reset_email(user.email, password_key) do
+             %Bamboo.Email{} <- Mail.send_password_reset_email(user.email, password_key) do
           {:ok, "password reset sent to accounts email"}
         else
           _ -> {:error, "failed to request reset password"}

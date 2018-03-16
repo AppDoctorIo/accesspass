@@ -5,14 +5,7 @@ The idea behind AccessPass was to have a very quick setup and have a full implem
 
 add the following to your deps:
 ```elixir
-{:access_pass, "~> 0.4.2"}
-```
-
-<b>NOTE:</b>
-
-You may have also add the following if an error about a poison version issue comes up(phoenix)
-```elixir
-{:poison, "~> 2.0.0", override: true}
+{:access_pass, "~> 0.5.0"}
 ```
 
 Before running mix deps.get please add the configuration below.
@@ -20,13 +13,15 @@ Before running mix deps.get please add the configuration below.
 
 Through the rest of the documentation I will be showing examples for using AccessPass with phoenix but that is NOT required. AccessPass can be used with plain plug and does not have a phoenix dependency.
 
-First we need to make sure you have the basic configs required. At minimum you need to have mailgun and an ecto repo configured like follows:
+First we need to make sure you have the basic configs required. At minimum you need to have a bamboo email adaptor set and an ecto repo configured like follows. Go [here](https://hexdocs.pm/bamboo/readme.html) for more information on bamboo adapters.
 
 ```elixir
+config :access_pass, AccessPass.Mailer,
+  adapter: Bamboo.SendgridAdapter,
+  api_key: "SG.yoursendgridkey"
+
 config :access_pass, 
         repo: Test.Repo,
-        mailgun_domain: "https://api.mailgun.net/v3/YOURURL",
-        mailgun_key:    "key-YOURKEY",
         from: "SENDINGEMAIL@whatever.com"
 ```
 The above configuration is assuming your application already has a ecto repo.
@@ -34,11 +29,12 @@ The above configuration is assuming your application already has a ecto repo.
 if not use the following:
 
 ```elixir
-config :access_pass, 
-	   mailgun_domain: "https://api.mailgun.net/v3/YOURURL",
-       mailgun_key:    "key-YOURKEY"
-       from: "SENDINGEMAIL@whatever.com"
+config :access_pass, AccessPass.Mailer,
+  adapter: Bamboo.SendgridAdapter,
+  api_key: "SG.yoursendgridkey"
 
+config :access_pass, 
+       from: "SENDINGEMAIL@whatever.com"
                  		 
 config :access_pass, :ecto_repos, [AccessPass.Repo]
 config :access_pass, AccessPass.Repo,[
