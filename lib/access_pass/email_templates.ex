@@ -4,7 +4,7 @@ defmodule AccessPass.EmailTemplates do
     """
     <p>Hi,</p>
     <p> Please go to the link below to activate your account</p>
-    <a href="https://api.example.com/confirm<%= conf_key %>">Confirm email</a>
+    <a href="https://api.example.com/confirm/<%= conf_key %>">Confirm email</a>
     <p>If you did not sign up for an account please disregard this email.</p>
     <p>Thanks,</p> 
     <p>EXAMPLE COMPANY NAME</p>
