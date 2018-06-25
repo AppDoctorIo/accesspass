@@ -39,7 +39,6 @@ defmodule AccessPass.Mixfile do
   defp deps do
     [
       {:bamboo, "~> 0.8"},
-      {:sync_m, "~> 0.1.1"},
       {:ecto, ">= 2.0.4"},
       {:plug, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},

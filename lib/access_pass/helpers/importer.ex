@@ -22,7 +22,7 @@ defmodule AccessPass.Importer do
   end
   defp router(func,arg) do
     if(Application.get_env(:access_pass, :distributed) == true) do   
-      apl({AccessPass.Mnesia,func,arg})
+      apl({AccessPass.EtsDistributed,func,arg})
     else
       apl({AccessPass.Ets,func,arg})
     end

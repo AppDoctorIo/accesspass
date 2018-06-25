@@ -12,7 +12,7 @@ defmodule AccessPass.AccessTokenServer do
   end
 
   def init(state) do
-    new(@ets, [:set, :protected, :named_table])
+    new(@ets, [:set, :public, :named_table])
     {:ok, state}
   end
 
