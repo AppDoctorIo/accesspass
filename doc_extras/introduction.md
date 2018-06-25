@@ -7,7 +7,7 @@ AccessPass uses the idea of access tokens and refresh tokens. Access tokens out 
 AccessPass access/refresh tokens are not actually tokens but merely ids used to look up a authorization. Unlike normal token based authentication you can revoke tokens at any time to prevent access while the implementation remains fast by hitting a GenServer and not a database. 
 
 ### Can it work across servers?
-AccessPass Supports distributed enviroments via the distributed and sync config flags. Read more about them in the config section. By default access pass uses ETS for token tracking but if distributed flag is true it will switch over to using mnesia. If sync flag is set to true access pass will work for dynamic node joins so if you spin up a new server and connect to a server that already has AccessPass running that new server will copy the current tables and join in on the mnesia replication. Take a look at SyncM on hex for more info
+AccessPass Supports distributed enviroments via the distributed and flag. Read more about them in the config section. By default access pass uses ETS for token tracking but if distributed flag is true it will start replicating all inserts to connected nodes. This is a for on "weak distribution" in the sense that newly joined nodes do not copy the current ets state from another node and if net split happens data may be lost on rejoin causing users to have to relog. Replicated ETS was choses over mnesia because mnesia is very hard to make a general solution to just "work" for all node structures.
 
 ### What does it do?
 When using AccessPass you get the following done for you:
@@ -24,19 +24,19 @@ defmodule YourApplication do
   use Ecto.Migration
 
   def change do
-  	create table(:users) do
-  		add :user_id, :string
-  		add :username, :string, size: 20
-  		add :meta, :map
-  		add :email, :string
-  		add :password_hash, :string
-  	    add :successful_login_attempts, :integer
+    create table(:users) do
+      add :user_id, :string
+      add :username, :string, size: 20
+      add :meta, :map
+      add :email, :string
+      add :password_hash, :string
+        add :successful_login_attempts, :integer
         add :confirm_id, :string
         add :password_reset_key, :string
         add :password_reset_expire, :integer
         add :confirmed, :boolean
-  		timestamps
-  	end
+      timestamps
+    end
     create unique_index(:users, [:email])
     create unique_index(:users, [:user_id])
     create unique_index(:users, [:username])
