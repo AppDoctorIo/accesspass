@@ -14,7 +14,19 @@ defmodule AccessPass.GateKeeper do
     case create_and_insert(user_obj) do
       {:ok, user} ->
         Mail.send_confirmation_email(user.email, user.confirm_id)
-        {:ok, RefreshToken.add(user.user_id, %{user_id: user.user_id, meta: user.meta}, refresh_expire_in())}
+
+        {:ok,
+         RefreshToken.add(
+           user.user_id,
+           %{
+             user_id: user.user_id,
+             email_confirmed: user.confirmed,
+             email: user.email,
+             username: user.username,
+             meta: user.meta
+           },
+           refresh_expire_in()
+         )}
 
       {:error, changeset} ->
         {:error, changeset |> Ecto.Changeset.traverse_errors(&translate_error/1)}
@@ -82,8 +94,22 @@ defmodule AccessPass.GateKeeper do
 
   def log_in(username, password) do
     case login(username, password) do
-      {:ok, user} -> {:ok, RefreshToken.add(user.user_id, %{user_id: user.user_id, meta: user.meta}, refresh_expire_in())}
-      {:error} -> {:error, "username or password is incorrect"}
+      {:ok, user} ->
+        {:ok,
+         RefreshToken.add(
+           user.user_id,
+           %{
+             user_id: user.user_id,
+             email_confirmed: user.confirmed,
+             email: user.email,
+             username: user.username,
+             meta: user.meta
+           },
+           refresh_expire_in()
+         )}
+
+      {:error} ->
+        {:error, "username or password is incorrect"}
     end
   end
 
@@ -120,9 +146,11 @@ defmodule AccessPass.GateKeeper do
   def insert_override(changeset) do
     repo().insert(changeset)
   end
+
   defp create_and_insert(user_obj) do
     Users.create_user_changeset(user_obj)
-    |> insert_override().insert_override() |> after_insert().after_insert()
+    |> insert_override().insert_override()
+    |> after_insert().after_insert()
   end
 
   defp return_from_conf({:ok, _}) do

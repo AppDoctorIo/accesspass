@@ -39,7 +39,7 @@ defmodule AccessPass.Users do
     |> put_user_id
     |> gen_confirmed_id
     |> validate_email
-    |> validate_required([:username, :email,:password])
+    |> validate_required([:username, :email, :password])
     |> validate_length(:username, min: 3, max: 36)
     |> validate_length(:email, min: 3, max: 256)
     |> validate_length(:password, min: 6)
@@ -108,6 +108,7 @@ defmodule AccessPass.Users do
   def custom(changeset) do
     changeset
   end
+
   def after_insert(changeset) do
     changeset
   end
@@ -118,6 +119,7 @@ defmodule AccessPass.Users do
 
   def gen_user_id(changeset) do
     user_id = string_of_length(id_len())
+
     case repo().get(AccessPass.Users, user_id) do
       %AccessPass.Users{} -> gen_user_id(changeset)
       _ -> {changeset, user_id}

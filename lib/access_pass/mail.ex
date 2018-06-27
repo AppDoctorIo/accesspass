@@ -27,13 +27,14 @@ defmodule AccessPass.Mail do
   def send_mail(_, nil, _, _) do
     IO.inspect("please set from in config in order to send any emails")
   end
-  
+
   def send_mail(to, from, subject, content) do
     new_email(
       to: to,
       from: from,
       subject: subject,
       html_body: content
-    ) |>  Mailer.deliver_now
+    )
+    |> Mailer.deliver_now()
   end
 end

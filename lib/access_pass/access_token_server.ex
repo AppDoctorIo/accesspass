@@ -18,8 +18,13 @@ defmodule AccessPass.AccessTokenServer do
 
   def handle_call({:add, refresh_token, meta}, _, _) do
     access_token = GateKeeper.genToken()
-    Process.send_after(@name, {:revoke, access_token}, access_expire_in() * 1000)
-    insert(@ets, {access_token, refresh_token, meta})
+
+    insert_with_revoke(
+      @ets,
+      {access_token, refresh_token, meta},
+      {@name, {:revoke, access_token}, access_expire_in() * 1000}
+    )
+
     {:reply, access_token, %{}}
   end
 
@@ -37,7 +42,7 @@ defmodule AccessPass.AccessTokenServer do
     delete(@ets, access_token)
     {:noreply, %{}}
   end
-  
+
   def handle_cast({:revoke, refresh_token}, %{}) do
     match_delete(@ets, {:_, refresh_token, :_})
     {:noreply, %{}}

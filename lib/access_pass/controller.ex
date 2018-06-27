@@ -77,8 +77,9 @@ defmodule AccessPass.Controller do
   end
 
   defp json(conn, status, obj) do
-    put_resp_content_type(conn,"application/json") |>
-    send_resp(status, Poison.encode!(obj)) |> halt()
+    put_resp_content_type(conn, "application/json")
+    |> send_resp(status, Poison.encode!(obj))
+    |> halt()
   end
 
   defp getBodyValue(conn, val) do

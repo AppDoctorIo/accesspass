@@ -37,6 +37,7 @@ defmodule AccessPass.Routes do
     quote do
       import AccessPass.Routes
       alias AccessPass.Auth
+      alias AccessPass.AuthExtended
     end
   end
 

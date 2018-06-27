@@ -20,7 +20,7 @@ defmodule AccessPassTest do
     map = RefreshToken.add("uniq", %{}, 0)
     access_token = map.access_token
     refresh_token = map.refresh_token
-    assert RefreshToken.refresh(refresh_token)  |> TestHelpers.isOkTup() == true
+    assert RefreshToken.refresh(refresh_token) |> TestHelpers.isOkTup() == true
     assert AccessToken.check(access_token) |> TestHelpers.isOkTup() == true
     assert RefreshToken.revoke(refresh_token)
     assert AccessToken.check(access_token) |> TestHelpers.isErrorTup() == true

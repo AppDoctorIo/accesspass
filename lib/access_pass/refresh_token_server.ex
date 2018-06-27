@@ -1,7 +1,7 @@
 defmodule AccessPass.RefreshTokenServer do
   @moduledoc false
   use GenServer
-  
+
   import AccessPass.Importer
 
   @name :refresh_token
@@ -27,13 +27,14 @@ defmodule AccessPass.RefreshTokenServer do
         insert(@ets, {uniq, refresh, access, meta})
         {:reply, {:ok, access}, %{}}
 
-      _ -> {:reply, {:error, "error getting token data"}, %{}}
+      _ ->
+        {:reply, {:error, "error getting token data"}, %{}}
     end
   end
 
   def handle_call({:add, uniq, meta, 0}, _from, %{}) do
     refresh = GateKeeper.genToken()
-    new_access_token = AccessPass.AccessToken.add(refresh, meta) 
+    new_access_token = AccessPass.AccessToken.add(refresh, meta)
     insert(@ets, {uniq, refresh, new_access_token, meta})
     {:reply, GateKeeper.formatTokens(refresh, new_access_token, 0), %{}}
   end
@@ -41,8 +42,13 @@ defmodule AccessPass.RefreshTokenServer do
   def handle_call({:add, uniq, meta, revokeAt}, _from, %{}) when is_integer(revokeAt) do
     refresh = GateKeeper.genToken()
     new_access_token = AccessPass.AccessToken.add(refresh, meta)
-    insert(@ets, {uniq, refresh, new_access_token, meta})
-    Process.send_after(@name, {:revoke, refresh}, revokeAt * 1000)
+
+    insert_with_revoke(
+      @ets,
+      {uniq, refresh, new_access_token, meta},
+      {@name, {:revoke, refresh}, revokeAt * 1000}
+    )
+
     {:reply, GateKeeper.formatTokens(refresh, new_access_token, revokeAt), %{}}
   end
 
