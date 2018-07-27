@@ -30,11 +30,11 @@ defmodule YourApplication do
       add :meta, :map
       add :email, :string
       add :password_hash, :string
-        add :successful_login_attempts, :integer
-        add :confirm_id, :string
-        add :password_reset_key, :string
-        add :password_reset_expire, :integer
-        add :confirmed, :boolean
+      add :successful_login_attempts, :integer
+      add :confirm_id, :string
+      add :password_reset_key, :string
+      add :password_reset_expire, :integer
+      add :confirmed, :boolean
       timestamps
     end
     create unique_index(:users, [:email])
