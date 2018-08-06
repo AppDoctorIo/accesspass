@@ -1,22 +1,10 @@
 # Configuration Options
 
+<b>overrides_module</b>: Module that impliments AccessPassBehavior to offer customization of email templates and many other hooks.
+
 <b>repo</b>: used to point to an already existing repo for ecto
 
-<b>confirmation\_template</b>: a mfa tuple that returns html to use when sending confirmation emails.
-
 <b>distributed</b>: a boolean that will decide on if data should be replicated to other connected nodes.
-
-<b>password\_reset\_template</b>: a mfa tuple that returns html to use when sending password reset email
-
-<b>forgot\_username\_template</b>: a mfa tuple that returns html to use when sending forgot username email
-
-<b>id\_gen\_mod</b>: Points to a Module that contains an gen\_user\_id(changeset) function
-
-<b>custom\_change\_mod</b>: Points to a Module that contains an custom(changeset) function. This function runs at the very end of the changeset pipeline on user registration giving you the option to change anything in the changeset before db insert. Must return a changeset.
-
-<b> insert\_override\_mod </b>: Points to a Module that contains an insert_override(changeset) function. This can be used to wrap the insert of a user in a transaction with some other inserts. You should at some point attempt to insert the user changeset in this function and return the results of that insert. Expects the same type of results from a normal Repo.insert(cs)...ie {:ok, cs} or {:error, cs} returned
-
-<b>after\_insert\_mod </b>: Points to a Module that contains an after_insert(insert_result) function. This can be used for stuff like logging or adding the user to an internal cache. it is passed a standard Repo.insert return and should pass a result that matches what it was passed. Make sure to handle both a Repo.failed insert({:error, cs}) and a Repo.passed insert({:ok,cs})
 
 <b>refresh\_expire\_in</b>: time in seconds to expire each refresh token
 

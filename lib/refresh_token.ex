@@ -1,8 +1,6 @@
 defmodule AccessPass.RefreshToken do
-  @moduledoc """
-    RefreshToken communicated internally with a GenServer implementation of your
-    applications valid refresh tokens.
-  """
+  @moduledoc false
+  
   @server_name :refresh_token
   @doc """
     will add a new refresh token and return a token object

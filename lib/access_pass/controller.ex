@@ -69,7 +69,8 @@ defmodule AccessPass.Controller do
   def change_password(%{method: "POST"} = conn, _) do
     case AccessPass.change_password(
            getBodyValue(conn, "password_id"),
-           getBodyValue(conn, "new_password")
+           getBodyValue(conn, "new_password"),
+           getBodyValue(conn, "password_confirm")
          ) do
       {:ok} -> conn |> json(200, %{ok: "password changed"})
       {:error, err} -> conn |> json(400, %{error: err})

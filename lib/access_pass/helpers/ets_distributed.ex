@@ -1,4 +1,5 @@
 defmodule AccessPass.EtsDistributed do
+  @moduledoc false
   def insert(name, obj) do
     AccessPass.Ets.insert(name, obj)
     replicate(:insert, name, obj)

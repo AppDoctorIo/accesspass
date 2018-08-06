@@ -49,6 +49,7 @@ defmodule AccessPass do
       AccessPass.register(%{
         username: "example",
         password: "otherexample",
+        password_confirm: "otherexample",
         email: "example@email.com",
         meta: {
           coolInfo: "stored in here"
@@ -156,9 +157,9 @@ defmodule AccessPass do
 
   ## Examples
 
-      AccessPass.change_password("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi","myNewPassword")
+      AccessPass.change_password("ODhhMDgzYwfefdfeC00YjgyLWFiZGMtZTJjOWZiMzJjODhi","myNewPassword","myNewPassword")
       {:ok}
 
   """
-  defdelegate change_password(password_id, new_password), to: GateKeeper, as: :change_password
+  defdelegate change_password(password_id, new_password,password_confirm), to: GateKeeper, as: :change_password
 end

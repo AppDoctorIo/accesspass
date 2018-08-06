@@ -43,6 +43,7 @@ This endpoint is used to register a new user
 { 
   "username": "username",
   "password": "password",
+  "password_confirm": "password"
   "email"   : "email",
   "meta"    : {}  
 }       
@@ -138,6 +139,7 @@ password resets expire 2 hours after sent.
 ```json
 { 
   "password_id": "passwordid",
+  "password_confirm":"the new password to be set for a user"
   "new_password": "the new password to be set for a user"
 }       
 ```
