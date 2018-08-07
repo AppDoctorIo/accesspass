@@ -144,3 +144,21 @@ password resets expire 2 hours after sent.
 }       
 ```
 
+### POST /forgot_username
+
+This endpoint is used to have a user's forgotten username emailed to them.
+
+<b>Required Params</b>
+
+<b>body</b>: 
+
+```json
+{ 
+  "email"   : "email",
+}       
+```
+<b>Returns:</b>
+
+```json
+	{"ok": "An email has been sent to you with your username"}
+```

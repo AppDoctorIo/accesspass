@@ -19,6 +19,8 @@ defmodule AccessPass.Routes do
 
      POST /change_password
 
+     POST /forgot_username
+
      usage:
      ```elixir
     defmodule TestWeb.Router do
