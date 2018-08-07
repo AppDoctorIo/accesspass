@@ -1,16 +1,9 @@
 # Email Templating
 AccessPass sends 3 different type of emails for you. Confirmation email after a new user registration, password reset email and forgot username email. Out of the box is uses a very basic html for each.
 
-AccessPass allows you to override each of those emails by using a mfa tuple in configs like follows.
+AccessPass allows you to override each of those emails by using the AccessPassBehavior. Look at the AccessPassBehavior module docs for more details.
 
 The html returned by your functions will go through EEx to swap for needed information. Below will show you the required EEx keys.
-
-```elixir
-config :access_pass, 
-        confirmation_template: {Test.Temps, :conf_template, []},        
-        password_reset_template: {Test.Temps, :reset_template, []},
-        forgot_username_template: {Test.Temp, :forgot_user_template, []}
-```
 
 ### confirmation template
 

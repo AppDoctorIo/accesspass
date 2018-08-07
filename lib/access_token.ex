@@ -1,8 +1,6 @@
 defmodule AccessPass.AccessToken do
-  @moduledoc """
-    AccessToken communicated internally with a GenServer implementation of your
-    applications valid access tokens.
-  """
+  @moduledoc false
+
   @server_name :access_token
   @doc """
   will add a new access_token with meta based on refresh_token

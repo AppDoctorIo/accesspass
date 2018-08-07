@@ -1,3 +1,8 @@
+defmodule AccessPass.Gettext do
+  @moduledoc false
+  use Gettext, otp_app: :access_pass
+end
+
 defmodule AccessPass.GateKeeper do
   @moduledoc false
   alias AccessPass.{Mail, Users, AccessToken, RefreshToken}
@@ -11,25 +16,21 @@ defmodule AccessPass.GateKeeper do
   defdelegate refresh(refresh_token), to: RefreshToken
 
   def register(user_obj) do
-    case create_and_insert(user_obj) do
-      {:ok, user} ->
-        Mail.send_confirmation_email(user.email, user.confirm_id)
-
-        {:ok,
-         RefreshToken.add(
-           user.user_id,
-           %{
-             user_id: user.user_id,
-             email_confirmed: user.confirmed,
-             email: user.email,
-             username: user.username,
-             meta: user.meta
-           },
-           refresh_expire_in()
-         )}
-
+    with {:ok, user} <- create_and_insert(user_obj),
+         _ <- Mail.send_confirmation_email(user.email, user.confirm_id),
+         {:ok, token_body} <- overrides_mod().after_login(user) do
+      {:ok,
+       RefreshToken.add(
+         user.user_id,
+         token_body,
+         refresh_expire_in()
+       )}
+    else
       {:error, changeset} ->
         {:error, changeset |> Ecto.Changeset.traverse_errors(&translate_error/1)}
+
+      _ ->
+        {:error, "error registering account"}
     end
   end
 
@@ -58,10 +59,10 @@ defmodule AccessPass.GateKeeper do
     AccessToken.revoke(access_token)
   end
 
-  def change_password(password_id, new_password) do
+  def change_password(password_id, new_password,password_confirm) do
     with %Users{} = user <- repo().get_by(Users, password_reset_key: password_id),
          {:ok, %AccessPass.Users{}} <-
-           AccessPass.Users.update_password(user, %{password: new_password}) |> repo().update() do
+           AccessPass.Users.update_password(user, %{password: new_password, password_confirm: password_confirm}) |> repo().update() do
       {:ok}
     else
       {:error, changeset} ->
@@ -93,33 +94,27 @@ defmodule AccessPass.GateKeeper do
   end
 
   def log_in(username, password) do
-    case login(username, password) do
-      {:ok, user} ->
-        {:ok,
-         RefreshToken.add(
-           user.user_id,
-           %{
-             user_id: user.user_id,
-             email_confirmed: user.confirmed,
-             email: user.email,
-             username: user.username,
-             meta: user.meta
-           },
-           refresh_expire_in()
-         )}
-
-      {:error} ->
-        {:error, "username or password is incorrect"}
+    with {:ok, user} <- login(username, password),
+         {:ok, token_body} <- overrides_mod().after_login(user) do
+      {:ok,
+       RefreshToken.add(
+         user.user_id,
+         token_body,
+         refresh_expire_in()
+       )}
+    else
+      {:error} -> {:error, "username or password is incorrect"}
+      _ -> {:error, "error with login endpoint"}
     end
   end
 
   def confirm(confirm_id) do
-    case repo().get_by(Users, confirm_id: confirm_id) do
-      nil ->
-        {:error, "User confirmation failed"}
-
-      %AccessPass.Users{} = user ->
-        Users.update_key(user, :confirmed, true) |> repo().update() |> return_from_conf
+    with %AccessPass.Users{} = user <- repo().get_by(Users, confirm_id: confirm_id),
+         {:ok, _} <- Users.update_key(user, :confirmed, true) |> repo().update(),
+         {:ok} <- overrides_mod().after_confirm(user) do
+      {:ok, "email confirmed"}
+    else
+      _ -> {:error, "email confirmation failed"}
     end
   end
 
@@ -143,22 +138,10 @@ defmodule AccessPass.GateKeeper do
 
   # Private functions
   # ===================================================== 
-  def insert_override(changeset) do
-    repo().insert(changeset)
-  end
-
   defp create_and_insert(user_obj) do
     Users.create_user_changeset(user_obj)
-    |> insert_override().insert_override()
-    |> after_insert().after_insert()
-  end
-
-  defp return_from_conf({:ok, _}) do
-    {:ok, "email confirmed"}
-  end
-
-  defp return_from_conf(_) do
-    {:error, "email confirmation failed"}
+    |> overrides_mod().insert_override()
+    |> overrides_mod().after_insert()
   end
 
   defp login(username, password) do

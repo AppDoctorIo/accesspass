@@ -14,6 +14,7 @@ defmodule AccessPass.Users do
     field(:password_hash, :string)
     field(:successful_login_attempts, :integer, default: 1)
     field(:password, :string, virtual: true)
+    field(:password_confirm, :string, virtual: true)
     field(:confirmed, :boolean, default: false)
     field(:confirm_id, :string)
     field(:password_reset_key, :string)
@@ -22,7 +23,7 @@ defmodule AccessPass.Users do
     timestamps()
   end
 
-  @required_fields ~w(username email password)
+  @required_fields ~w(username email password password_confirm)
   @optional_fields ~w(confirm_id meta password_reset_key password_reset_expire)
   def genId() do
     Ecto.UUID.generate() |> Base.encode64(padding: false)
@@ -35,23 +36,37 @@ defmodule AccessPass.Users do
 
   def create_user_changeset(params) do
     changeset(%AccessPass.Users{}, params)
-    |> id_gen().gen_user_id()
+    |> overrides_mod().gen_user_id()
     |> put_user_id
     |> gen_confirmed_id
     |> validate_email
-    |> validate_required([:username, :email, :password])
+    |> validate_required([:username, :email, :password, :password_confirm])
     |> validate_length(:username, min: 3, max: 36)
     |> validate_length(:email, min: 3, max: 256)
     |> validate_length(:password, min: 6)
+    |> compare_passwords()
     |> unique_constraint(:email)
     |> unique_constraint(:user_id)
     |> unique_constraint(:username)
     |> add_hash
-    |> custom_change().custom()
+    |> overrides_mod().custom_user_changes()
   end
+
+  def compare_passwords(%Ecto.Changeset{valid?: true} = changeset) do
+    with password <- get_field(changeset, :password),
+         password_confirm <- get_field(changeset, :password_confirm),
+         true <- password == password_confirm do
+      changeset
+    else
+      _ -> add_error(changeset, :password_confirm, "Password fields do not match")
+    end
+  end
+  def compare_passwords(cs), do: cs
 
   def update_password(changeset, params) do
     changeset(changeset, params)
+    |> validate_required([:username, :email, :password, :password_confirm])
+    |> compare_passwords()
     |> not_expired
     |> validate_length(:password, min: 6)
     |> add_hash
@@ -105,28 +120,11 @@ defmodule AccessPass.Users do
     changeset |> put_change(:confirm_id, genId())
   end
 
-  def custom(changeset) do
-    changeset
-  end
-
-  def after_insert(changeset) do
-    changeset
-  end
-
   def put_user_id({changeset, user_id}) do
     changeset |> put_change(:user_id, user_id)
   end
 
-  def gen_user_id(changeset) do
-    user_id = string_of_length(id_len())
-
-    case repo().get(AccessPass.Users, user_id) do
-      %AccessPass.Users{} -> gen_user_id(changeset)
-      _ -> {changeset, user_id}
-    end
-  end
-
-  defp string_of_length(len) do
+  def string_of_length(len) do
     Enum.reduce(1..len, [], fn _i, acc ->
       [Enum.random(@chars) | acc]
     end)

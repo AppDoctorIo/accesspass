@@ -1,4 +1,5 @@
 defmodule AccessPass.Ets do
+  @moduledoc false
   def insert(name, obj) do
     :ets.insert(name, obj)
   end
