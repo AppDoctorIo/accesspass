@@ -50,6 +50,7 @@ config :access_pass,
         confirmation_subject: "welcome to my site", # default: "Confirmation email"
         reset_password_subject: "please reset password", # default: "Reset your password"
         forgot_username_subject: "woops you forgot this", # default: "Forgot Username"
+        base_url: "https://mydomain.example.com", # default: "https://api.example.com", used in email templates
 ```
 
 
