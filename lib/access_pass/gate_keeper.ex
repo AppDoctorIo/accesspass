@@ -24,7 +24,7 @@ defmodule AccessPass.GateKeeper do
          user.user_id,
          token_body,
          refresh_expire_in()
-       )}
+       )} |> overrides_mod().login_return(user)
     else
       {:error, changeset} ->
         {:error, changeset |> Ecto.Changeset.traverse_errors(&translate_error/1)}
@@ -101,7 +101,7 @@ defmodule AccessPass.GateKeeper do
          user.user_id,
          token_body,
          refresh_expire_in()
-       )}
+       ) |> overrides_mod().login_return(user)}
     else
       {:error} -> {:error, "username or password is incorrect"}
       _ -> {:error, "error with login endpoint"}

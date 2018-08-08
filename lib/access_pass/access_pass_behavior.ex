@@ -77,6 +77,20 @@ defmodule AccessPassBehavior do
 
   """  
   @callback confirmation_email() :: String.t()
+  @doc """
+  This function is passed a map of tokens and the user struct. What is returned will be forwarded along and returned by register/login
+
+  Returns `%{
+        "type": "basic",
+        "refresh_token": "OTc1Nzk5MTQtN2Y4Ny00MDI1LTk1YjgtNzA3OWNmN2Q3M2Iy",
+        "refresh_expire_in": 0,
+        "access_token": "ZDU1YjM2NGQtNTgyMi00OTRmLTgxYzItNTc5M2JiODNiYzAz",
+        "access_expire_in": 300,
+        "extra_param": "this is extra"
+    }`.
+
+  """  
+  @callback login_return(map,%AccessPass.Users{}) :: term
 
   defmacro __using__(_) do
     quote do
@@ -91,6 +105,9 @@ defmodule AccessPassBehavior do
            username: user.username,
            meta: user.meta
          }}
+      end
+      def login_return(token,user) do
+        token 
       end
 
       def custom_user_changes(changeset) do
