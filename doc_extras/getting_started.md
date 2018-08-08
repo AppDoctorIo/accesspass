@@ -126,6 +126,8 @@ The above will add endpoints for:
  POST /logout
 
  POST /change_password
+
+ POST /forgot_username
      
  For more information on the above routes jump ahead to Phoenix routes section of crash course.    
  
