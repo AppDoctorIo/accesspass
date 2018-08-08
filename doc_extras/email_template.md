@@ -9,15 +9,18 @@ The html returned by your functions will go through EEx to swap for needed infor
 
 <b>required:</b> <%= conf_key %>
 
+<b>optional:</b> <%= base_url %>
+
 example:
 
 ```elixir
 defmodule Test.Temps
-	def conf_template() do
-	"""
-	<a href="https://mysite.com?con_key=<%= conf_key %>"></a>
-	"""
-	end
+  use AccessPassBehavior
+  def confirmation_email() do
+  """
+  <a href="https://<%= base_url %>?con_key=<%= conf_key %>"></a>
+  """
+  end
 end
 ```
 
@@ -25,19 +28,22 @@ end
 
 <b>required:</b> <%= password_key %>
 
+<b>optional:</b> <%= base_url %>
+
 example:
 
 ```elixir
 defmodule Test.Temps
-	def reset_template() do
-	"""
-	<a href="https://mysite.com/reset?con_key=<%= password_key %>"></a>
-	"""
-	end
+  use AccessPassBehavior
+  def password_reset() do
+  """
+  <a href="https://<%= base_url %>/reset?con_key=<%= password_key %>"></a>
+  """
+  end
 end
 ```
 
-### password reset template
+### forgot username template
 
 <b>required:</b> <%= user_name %>
 
@@ -45,10 +51,11 @@ example:
 
 ```elixir
 defmodule Test.Temps
-	def forgot_user_template() do
-	"""
-	<h1> Your username is <%= user_name %>!</h1>
-	"""
-	end
+  use AccessPassBehavior
+  def forgot_username() do
+  """
+  <h1> Your username is <%= user_name %>!</h1>
+  """
+  end
 end
 ```
