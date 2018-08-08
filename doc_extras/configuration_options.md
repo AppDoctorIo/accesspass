@@ -22,6 +22,8 @@
 
 <b>bamboo email configs</b>: look [here](https://hexdocs.pm/bamboo/readme.html) for the configs needed. These configs go under config :access_pass, AccessPass.Mailer
 
+<b>base_url</b>: base URL to use for email templates.
+
 <b>ecto configurations</b>: If you want AccessPass to house your instance of Ecto as compared to providing repo: above then check out the getting started section for an example config.
 
 ```elixir
