@@ -10,7 +10,7 @@ defmodule AccessPass.Controller do
   def check(%{method: "GET"} = conn, _) do
     case AccessPass.logged?(getHeaderValue(conn, "access_token")) do
       {:ok, meta} -> conn |> json(200, %{ok: meta})
-      {:error, errorMessage} -> conn |> json(400, %{error: errorMessage})
+      {:error, errorMessage} -> conn |> json(401, %{error: "unauthorized"})
     end
   end
 
