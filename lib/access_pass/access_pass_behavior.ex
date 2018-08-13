@@ -36,12 +36,14 @@ defmodule AccessPassBehavior do
   """  
   @callback after_insert(%AccessPass.Users{}) :: %AccessPass.Users{}
   @doc """
-  This function is called as a replacement to Repo.insert and must run the insert op for the given changeset. It should return the return of Repo.insert
+  This function is called as a replacement to Repo.insert and must run the insert op for the given changeset.
+  It also passes the origional register params unaltered in case you want to add additional fields.
+  It should return the return of Repo.insert
 
   Returns `{:ok, %AccessPass.Users{}} | {:error, %AccessPass.Users{}}`
 
   """  
-  @callback insert_override(%Ecto.Changeset{}) :: {:ok, %AccessPass.Users{}} | {:error, %AccessPass.Users{}}
+  @callback insert_override(%Ecto.Changeset{},map) :: {:ok, %AccessPass.Users{}} | {:error, %AccessPass.Users{}}
   @doc """
   This function is called after a user has confirmed their email address and must return {:ok}
 
@@ -118,7 +120,7 @@ defmodule AccessPassBehavior do
         changeset
       end
 
-      def insert_override(changeset) do
+      def insert_override(changeset,params) do
         repo().insert(changeset)
       end
 

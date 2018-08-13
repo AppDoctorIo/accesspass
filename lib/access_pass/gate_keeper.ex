@@ -139,8 +139,9 @@ defmodule AccessPass.GateKeeper do
   # Private functions
   # ===================================================== 
   defp create_and_insert(user_obj) do
+    IO.inspect(user_obj)
     Users.create_user_changeset(user_obj)
-    |> overrides_mod().insert_override()
+    |> overrides_mod().insert_override(user_obj)
     |> overrides_mod().after_insert()
   end
 
