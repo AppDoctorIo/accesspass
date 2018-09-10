@@ -7,6 +7,7 @@ defmodule AccessPass.GateKeeper do
   @moduledoc false
   alias AccessPass.{Mail, Users, AccessToken, RefreshToken}
   import AccessPass.Config
+  import Ecto.Query
 
   def genToken() do
     Ecto.UUID.generate() |> Base.encode64(padding: false)
@@ -143,9 +144,14 @@ defmodule AccessPass.GateKeeper do
     |> overrides_mod().insert_override(user_obj)
     |> overrides_mod().after_insert()
   end
-
+  defp login_query(username) do
+    from(
+      u in Users,
+      where: (fragment("lower(?)", u.username) == fragment("lower(?)", ^username) or fragment("lower(?)", u.email) == fragment("lower(?)", ^username))
+      ) |> repo().one
+  end
   defp login(username, password) do
-    with %Users{} = user <- repo().get_by(Users, username: username),
+    with %Users{} = user <- login_query(username),
          true <- Comeonin.Bcrypt.checkpw(password, user.password_hash),
          {:ok, user} <-
            user

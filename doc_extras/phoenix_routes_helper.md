@@ -84,7 +84,7 @@ This endpoint handles user login.
 
 ```json
 { 
-  "username": "username",
+  "username": "username or email case insensitive",
   "password": "password"
 }       
 ```

@@ -80,7 +80,7 @@ defmodule AccessPass do
   defdelegate confirm(confirm_id), to: GateKeeper, as: :confirm
 
   @doc """
-    Register a new user
+    Logs in a user. Case insensitive username or email can be used along with password.
 
   Returns `{"ok":
             {
