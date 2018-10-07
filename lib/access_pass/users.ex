@@ -7,6 +7,7 @@ defmodule AccessPass.Users do
   alias AccessPass.GateKeeper
   import AccessPass.Config
   @primary_key {:user_id, :string, autogenerate: false}
+  @derive {Phoenix.Param, key: :user_id}
   schema "users" do
     field(:username, :string)
     field(:meta, :map, default: %{})
@@ -61,6 +62,7 @@ defmodule AccessPass.Users do
       _ -> add_error(changeset, :password_confirm, "Password fields do not match")
     end
   end
+
   def compare_passwords(cs), do: cs
 
   def update_password(changeset, params) do
