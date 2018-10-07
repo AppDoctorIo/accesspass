@@ -19,7 +19,7 @@ defmodule AccessPass.Mixfile do
           "Crash Course": Path.wildcard("doc_extras/*.md")
         ]
       ],
-      version: "0.6.1",
+      version: "0.6.2",
       description:
         "Provides a full user authentication expierence for an API. 
       Includes login,logout,register,forgot password, forgot username, confirmation email and all that other good stuff.
@@ -53,7 +53,7 @@ defmodule AccessPass.Mixfile do
     [
       maintainers: ["Jordan Piepkow"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/jpiepkow/accesspass"}
+      links: %{"GitHub" => "https://github.com/AppDoctorIo/accesspass"}
     ]
   end
 end
