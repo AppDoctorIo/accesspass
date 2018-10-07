@@ -7,7 +7,9 @@ defmodule AccessPass.Users do
   alias AccessPass.GateKeeper
   import AccessPass.Config
   @primary_key {:user_id, :string, autogenerate: false}
-  @derive {Phoenix.Param, key: :user_id}
+  if Application.get_env(:access_pass, :phoenix) ==  true do
+    @derive {Phoenix.Param, key: :user_id}  
+  end
   schema "users" do
     field(:username, :string)
     field(:meta, :map, default: %{})

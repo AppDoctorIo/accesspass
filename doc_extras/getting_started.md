@@ -5,7 +5,7 @@ The idea behind AccessPass was to have a very quick setup and have a full implem
 
 add the following to your deps:
 ```elixir
-{:access_pass, "~> 0.5.0"}
+{:access_pass, "~> 0.6.1"}
 ```
 
 Before running mix deps.get please add the configuration below.

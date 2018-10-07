@@ -12,6 +12,8 @@
 
 <b>id\_len</b>: number of characters in default id generation
 
+<b>phoneix</b>: boolean if you are running accesspass in phoenix. It will set  @derive {Phoenix.Param, key: :user_id} if true
+
 <b>from</b>: email address mailgun will be using to send emails.
 
 <b>confirmation\_subject</b>: string to override confirmation subject line of email.
@@ -34,6 +36,7 @@ config :access_pass, AccessPass.Mailer,
 
 config :access_pass, 
         repo: Test.Repo,
+        phoenix: true,
         distributed: true,
         sync: true,                                         #Required if already using ecto
         mailgun_domain: "https://api.mailgun.net/v3/YOURDOMAIN", #Required

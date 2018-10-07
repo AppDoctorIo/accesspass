@@ -1,5 +1,6 @@
 defmodule AccessPassBehavior do
   import AccessPass.Config
+  
   @moduledoc """
     This Module provides you the ability to override AccessPass behavior
     Create a new module in your application and impliment any of the callbacks below to override default behavior.
@@ -80,6 +81,22 @@ defmodule AccessPassBehavior do
   """  
   @callback confirmation_email() :: String.t()
   @doc """
+  This is used to override unauth errors
+  This function should call plug send_resp and halt the plug. You can set your own status code / return  override here.
+
+  Returns `conn`.
+
+  """  
+  @callback auth_error(%Plug.Conn{}) :: %Plug.Conn{}
+  @doc """
+  This is used to override what is returned for auth error when email is not confirmed.
+  This function should call plug send_resp and halt the plug. You can set your own status code / return  override here.
+
+  Returns `conn`.
+
+  """  
+  @callback auth_error(%Plug.Conn{}) :: %Plug.Conn{}
+  @doc """
   This function is passed a map of tokens and the user struct. What is returned will be forwarded along and returned by register/login
 
   Returns `%{
@@ -96,6 +113,7 @@ defmodule AccessPassBehavior do
 
   defmacro __using__(_) do
     quote do
+      import Plug.Conn
       @behaviour AccessPassBehavior
 
       def after_login(user) do
@@ -108,6 +126,13 @@ defmodule AccessPassBehavior do
            meta: user.meta
          }}
       end
+      def auth_error(conn) do
+        send_resp(conn, 401, "unauthorized") |> halt()
+      end
+      def email_auth_error(conn) do
+        send_resp(conn,401, "email address not confirmed") |> halt()
+      end
+
       def login_return(token,user) do
         token 
       end
