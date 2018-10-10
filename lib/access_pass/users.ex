@@ -35,6 +35,14 @@ defmodule AccessPass.Users do
   def changeset(schema, params \\ :empty) do
     schema
     |> cast(params, @required_fields ++ @optional_fields)
+    |> validate_email
+    |> validate_required([:username, :email, :password, :password_confirm])
+    |> validate_length(:username, min: 3, max: 36)
+    |> validate_length(:email, min: 3, max: 256)
+    |> validate_length(:password, min: 6)
+    |> unique_constraint(:email)
+    |> unique_constraint(:user_id)
+    |> unique_constraint(:username)
   end
 
   def create_user_changeset(params) do
@@ -42,15 +50,7 @@ defmodule AccessPass.Users do
     |> overrides_mod().gen_user_id()
     |> put_user_id
     |> gen_confirmed_id
-    |> validate_email
-    |> validate_required([:username, :email, :password, :password_confirm])
-    |> validate_length(:username, min: 3, max: 36)
-    |> validate_length(:email, min: 3, max: 256)
-    |> validate_length(:password, min: 6)
     |> compare_passwords()
-    |> unique_constraint(:email)
-    |> unique_constraint(:user_id)
-    |> unique_constraint(:username)
     |> add_hash
     |> overrides_mod().custom_user_changes()
   end
