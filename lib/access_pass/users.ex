@@ -7,9 +7,10 @@ defmodule AccessPass.Users do
   alias AccessPass.GateKeeper
   import AccessPass.Config
   @primary_key {:user_id, :string, autogenerate: false}
-  if Application.get_env(:access_pass, :phoenix) ==  true do
-    @derive {Phoenix.Param, key: :user_id}  
+  if Application.get_env(:access_pass, :phoenix) == true do
+    @derive {Phoenix.Param, key: :user_id}
   end
+
   schema "users" do
     field(:username, :string)
     field(:meta, :map, default: %{})
@@ -36,10 +37,9 @@ defmodule AccessPass.Users do
     schema
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_email
-    |> validate_required([:username, :email, :password, :password_confirm])
+    |> validate_required([:username, :email])
     |> validate_length(:username, min: 3, max: 36)
     |> validate_length(:email, min: 3, max: 256)
-    |> validate_length(:password, min: 6)
     |> unique_constraint(:email)
     |> unique_constraint(:user_id)
     |> unique_constraint(:username)
@@ -47,6 +47,8 @@ defmodule AccessPass.Users do
 
   def create_user_changeset(params) do
     changeset(%AccessPass.Users{}, params)
+    |> validate_required([:password, :password_confirm])
+    |> validate_length(:password, min: 6)
     |> overrides_mod().gen_user_id()
     |> put_user_id
     |> gen_confirmed_id
