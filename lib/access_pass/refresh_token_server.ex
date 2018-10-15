@@ -31,16 +31,22 @@ defmodule AccessPass.RefreshTokenServer do
         {:reply, {:error, "error getting token data"}, %{}}
     end
   end
+  def return_if_exists(uniq) do
+    case match_object(@ets,{uniq,:_,:_,:_}) do
+      [] -> GateKeeper.genToken()
+      [{_,refresh,_,_}] -> refresh
+    end
+  end
 
   def handle_call({:add, uniq, meta, 0}, _from, %{}) do
-    refresh = GateKeeper.genToken()
+    refresh = return_if_exists(uniq)
     new_access_token = AccessPass.AccessToken.add(refresh, meta)
     insert(@ets, {uniq, refresh, new_access_token, meta})
     {:reply, GateKeeper.formatTokens(refresh, new_access_token, 0), %{}}
   end
 
   def handle_call({:add, uniq, meta, revokeAt}, _from, %{}) when is_integer(revokeAt) do
-    refresh = GateKeeper.genToken()
+    refresh = return_if_exists(uniq)
     new_access_token = AccessPass.AccessToken.add(refresh, meta)
 
     insert_with_revoke(

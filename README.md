@@ -5,7 +5,7 @@
 ```elixir
 def deps do
   
-  [{:access_pass, "~> 0.6.4"}]
+  [{:access_pass, "~> 0.6.5"}]
 end
 ```
 
