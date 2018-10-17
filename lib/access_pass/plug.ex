@@ -1,6 +1,6 @@
 defmodule AccessPass.Auth do
   @moduledoc """
-   Plug that checks for access_token in header and then checks if its expired or revoked.
+   Plug that checks for access-token in header and then checks if its expired or revoked.
    If it's not expired/revoked it adds the stored data from the token in meta.
    If it is then it returns 401 unauthorized and halts the plug by default. Can be changed. 
    You can pass confirmed: true on the plug to only auth if the users email has been confirmed.
@@ -13,7 +13,7 @@ defmodule AccessPass.Auth do
   end
 
   def call(conn, confirmed: true) do
-    token = conn |> getHeaderValue("access_token")
+    token = conn |> getHeaderValue("access-token")
 
     case AccessPass.logged?(token) do
       {:ok, data} -> email_confirmation_check(conn, data)
@@ -22,7 +22,7 @@ defmodule AccessPass.Auth do
   end
 
   def call(conn, _) do
-    token = conn |> getHeaderValue("access_token")
+    token = conn |> getHeaderValue("access-token")
 
     case AccessPass.logged?(token) do
       {:ok, data} -> conn |> assign(:data, data)
@@ -51,7 +51,7 @@ end
 
 defmodule AccessPass.AuthExtended do
   @moduledoc """
-   Plug that checks for access_token in header and then checks if its expired or revoked.
+   Plug that checks for access-token in header and then checks if its expired or revoked.
    If it's not expired/revoked it adds the stored data from the token in meta.
    If it is then it returns 401 unauthorized and halts the plug by default. Can be changed. 
    You can pass any number of arguments in keyword list format to match against the users
@@ -65,7 +65,7 @@ defmodule AccessPass.AuthExtended do
   end
 
   def call(conn, keyword_list) do
-    token = conn |> getHeaderValue("access_token")
+    token = conn |> getHeaderValue("access-token")
 
     case AccessPass.logged?(token) do
       {:ok, data} -> extended_auth(conn, data, keyword_list)

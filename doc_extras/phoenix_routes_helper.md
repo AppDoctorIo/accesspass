@@ -21,7 +21,7 @@ This endpoint is used to check if an access token is expired or as a quick way t
 
 <b>Required Params</b>
 
-<b>headers</b>: access_token
+<b>headers</b>: access-token
 
 ### GET /refresh
 
@@ -29,7 +29,7 @@ This endpoint is used to get a new access\_token with a given refresh\_token(thi
 
 <b>Required Params</b>
 
-<b>headers</b>: refresh_token
+<b>headers</b>: refresh-token
 
 ### POST /register
 
@@ -119,7 +119,7 @@ This endpoint is used to revoke both access and refresh token for this session. 
 
 <b>Required Params</b>
 
-<b>headers</b>: access_token
+<b>headers</b>: access-token
 
 ### POST /change_password
 This endpoint is used as the callback to a password reset. The flow is as follows.

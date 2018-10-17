@@ -8,14 +8,14 @@ defmodule AccessPass.Controller do
   end
 
   def check(%{method: "GET"} = conn, _) do
-    case AccessPass.logged?(getHeaderValue(conn, "access_token")) do
+    case AccessPass.logged?(getHeaderValue(conn, "access-token")) do
       {:ok, meta} -> conn |> json(200, %{ok: meta})
       {:error, errorMessage} -> conn |> json(401, %{error: "unauthorized"})
     end
   end
 
   def refresh(%{method: "GET"} = conn, _) do
-    case AccessPass.refresh(getHeaderValue(conn, "refresh_token")) do
+    case AccessPass.refresh(getHeaderValue(conn, "refresh-token")) do
       {:ok, meta} -> conn |> json(200, %{ok: meta})
       {:error, err} -> conn |> json(400, %{error: err})
     end
@@ -60,7 +60,7 @@ defmodule AccessPass.Controller do
   end
 
   def logout(%{method: "POST"} = conn, _) do
-    case AccessPass.logout(getHeaderValue(conn, "access_token")) do
+    case AccessPass.logout(getHeaderValue(conn, "access-token")) do
       {:ok} -> conn |> json(200, %{ok: "logged out"})
       {:error, err} -> conn |> json(400, %{error: err})
     end

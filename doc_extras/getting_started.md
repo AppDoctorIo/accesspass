@@ -148,7 +148,7 @@ defmodule TestWeb.Router do
   end
 end
 ```
-The above will authorize all routes in the /admin block by access_token in header. To learn more jump ahead to plugs section of crash course.
+The above will authorize all routes in the /admin block by access-token in header. To learn more jump ahead to plugs section of crash course.
  
 
 
