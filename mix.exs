@@ -21,7 +21,7 @@ defmodule AccessPass.Mixfile do
       ],
       version: "1.0.0",
       description:
-        "Provides a full user authentication expierence for an API. 
+        "Provides a full user authentication experience for an API. 
       Includes login,logout,register,forgot password, forgot username, confirmation email and all that other good stuff.
       Includes plug for checking for authenticated users and macro for generating the required routes.",
       elixir: "~> 1.4",

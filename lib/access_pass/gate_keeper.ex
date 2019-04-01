@@ -109,6 +109,22 @@ defmodule AccessPass.GateKeeper do
     end
   end
 
+  def bypass_log_in(username) do
+    with {:ok, user} <- bypass_login(username),
+         {:ok, token_body} <- overrides_mod().after_login(user) do
+      {:ok,
+       RefreshToken.add(
+         user.user_id,
+         token_body,
+         refresh_expire_in()
+       )
+       |> overrides_mod().login_return(user)}
+    else
+      {:error} -> {:error, "username incorrect"}
+      _ -> {:error, "error with bypass login endpoint"}
+    end
+  end
+
   def confirm(confirm_id) do
     with %AccessPass.Users{} = user <- repo().get_by(Users, confirm_id: confirm_id),
          {:ok, _} <- Users.update_key(user, :confirmed, true) |> repo().update(),
@@ -144,15 +160,29 @@ defmodule AccessPass.GateKeeper do
     |> overrides_mod().insert_override(user_obj)
     |> overrides_mod().after_insert()
   end
+
   defp login_query(username) do
     from(
       u in Users,
-      where: (fragment("lower(?)", u.username) == fragment("lower(?)", ^username) or fragment("lower(?)", u.email) == fragment("lower(?)", ^username))
-      ) |> repo().one
+      where: fragment("lower(?)", u.username) == fragment("lower(?)", ^username) or fragment("lower(?)", u.email) == fragment("lower(?)", ^username)
+    ) |> repo().one
   end
+
   defp login(username, password) do
     with %Users{} = user <- login_query(username),
          true <- Comeonin.Bcrypt.checkpw(password, user.password_hash),
+         {:ok, user} <-
+           user
+           |> Users.inc(:successful_login_attempts, user.successful_login_attempts)
+           |> repo().update() do
+      {:ok, user}
+    else
+      _ -> {:error}
+    end
+  end
+
+  defp bypass_login(username) do
+    with %Users{} = user <- login_query(username),
          {:ok, user} <-
            user
            |> Users.inc(:successful_login_attempts, user.successful_login_attempts)

@@ -112,6 +112,37 @@ defmodule AccessPass do
   defdelegate login(username, password), to: GateKeeper, as: :log_in
 
   @doc """
+    Logs in a user without a password.  This is intended for use with other authentication methods such as Webauthn. Case insensitive username or email is used.
+
+  Returns `{"ok":
+            {
+              "type":"TYPE",
+              "refresh_token":"refresh token",
+              "refresh_expire_in": seconds,
+              "access_token":"access_token",
+              "access_expire_in": seconds
+            }
+          }`
+
+  ## Examples
+
+      AccessPass.bypass_login(%{
+        username: "example"
+      })
+      {"ok":
+      {
+        "type":"basic",
+        "refresh_token":"MjNmYzgzNGMtMGM3MS00YTA4LTkxMWMtNDEyODU3Yzk2ZTgy",
+        "refresh_expire_in":1200,
+        "access_token":"ODhhMDgzYjctZTE3OC00YjgyLWFiZGMtZTJjOWZiMzJjODhi",
+        "access_expire_in":600
+      }
+      }
+  """
+
+  defdelegate bypass_login(username), to: GateKeeper, as: :bypass_log_in
+
+  @doc """
   calling will set a reset password email to the linked email account of the username
 
   Returns `{ok: "password reset sent to accounts email"}`.
