@@ -95,6 +95,7 @@ defmodule AccessPass.GateKeeper do
   end
 
   def log_in(username, password) do
+    
     with {:ok, user} <- login(username, password),
          {:ok, token_body} <- overrides_mod().after_login(user) do
       {:ok,
@@ -126,10 +127,18 @@ defmodule AccessPass.GateKeeper do
   end
 
   def confirm(confirm_id) do
-    with %AccessPass.Users{} = user <- repo().get_by(Users, confirm_id: confirm_id),
+    with %AccessPass.Users{
+      confirmed: false
+      } = user <- repo().get_by(Users, confirm_id: confirm_id),
          {:ok, _} <- Users.update_key(user, :confirmed, true) |> repo().update(),
          {:ok} <- overrides_mod().after_confirm(user) do
-      {:ok, "email confirmed"}
+      {:ok, RefreshToken.add(user.user_id,%{
+           user_id: user.user_id,
+           email_confirmed: true,
+           email: user.email,
+           username: user.username,
+           meta: user.meta
+         },refresh_expire_in())}
     else
       _ -> {:error, "email confirmation failed"}
     end

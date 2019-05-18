@@ -70,7 +70,13 @@ defmodule AccessPass do
   @doc """
   Marks a user email confirmed based on the given confirm_id
 
-  Returns `{:ok, "email confirmed"}`.
+  Returns `{:ok, {
+              "type":"TYPE",
+              "refresh_token":"refresh token",
+              "refresh_expire_in": seconds,
+              "access_token":"access_token",
+              "access_expire_in": seconds
+            }}`.
 
   ## Examples
 
