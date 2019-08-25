@@ -31,13 +31,6 @@ defmodule AccessPass.RefreshTokenServer do
         {:reply, {:error, "error getting token data"}, %{}}
     end
   end
-  def return_if_exists(uniq) do
-    case match_object(@ets,{uniq,:_,:_,:_}) do
-      [] -> GateKeeper.genToken()
-      [{_,refresh,_,_}] -> refresh
-    end
-  end
-
   def handle_call({:add, uniq, meta, 0}, _from, %{}) do
     refresh = return_if_exists(uniq)
     new_access_token = AccessPass.AccessToken.add(refresh, meta)
@@ -70,6 +63,13 @@ defmodule AccessPass.RefreshTokenServer do
 
     match_delete(@ets, {:_, refresh_token, :_, :_})
     {:reply, {:ok}, %{}}
+  end
+
+  def return_if_exists(uniq) do
+    case match_object(@ets,{uniq,:_,:_,:_}) do
+      [] -> GateKeeper.genToken()
+      [{_,refresh,_,_}] -> refresh
+    end
   end
 
   def handle_info({:revoke, refresh_token}, %{}) do

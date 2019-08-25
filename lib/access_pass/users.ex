@@ -27,8 +27,8 @@ defmodule AccessPass.Users do
     timestamps()
   end
 
-  @required_fields ~w(username email password password_confirm)
-  @optional_fields ~w(confirm_id meta password_reset_key password_reset_expire)
+  @required_fields [:username, :email, :password, :password_confirm,]
+  @optional_fields [:confirm_id, :meta, :password_reset_key, :password_reset_expire]
   def genId() do
     Ecto.UUID.generate() |> Base.encode64(padding: false)
   end
