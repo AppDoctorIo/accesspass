@@ -19,7 +19,7 @@ defmodule AccessPass.Mixfile do
           "Crash Course": Path.wildcard("doc_extras/*.md")
         ]
       ],
-      version: "1.0.2",
+      version: "1.0.3",
       description:
         "Provides a full user authentication experience for an API. 
       Includes login,logout,register,forgot password, forgot username, confirmation email and all that other good stuff.
@@ -41,7 +41,7 @@ defmodule AccessPass.Mixfile do
       {:bamboo, "~> 0.8"},
       {:ecto, ">= 2.0.4"},
       {:plug, "~> 1.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.19", only: :dev, runtime: false},
       {:gettext, "~> 0.11"},
       {:comeonin, "~> 2.0"},
       {:poison, ">= 0.0.0"},
