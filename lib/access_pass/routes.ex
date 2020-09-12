@@ -48,6 +48,7 @@ defmodule AccessPass.Routes do
       {:get, :check},
       {:get, :refresh},
       {:post, :register},
+      {:post, :resend_confirm},
       {:post, :confirm},
       {:post, :login},
       {:post, :reset_password},

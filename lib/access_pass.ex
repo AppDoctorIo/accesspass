@@ -68,6 +68,18 @@ defmodule AccessPass do
   defdelegate register(user_obj), to: GateKeeper, as: :register
 
   @doc """
+    Resends confirmation email
+
+  Returns `{"ok": "confirmation email resent"}`
+
+  ## Examples
+
+      AccessPass.resend_confirm(%{username: "example"})
+      {"ok": "confirmation email resent"}
+  """
+  defdelegate resend_confirm(username), to: GateKeeper, as: :resend_confirm
+
+  @doc """
   Marks a user email confirmed based on the given confirm_id
 
   Returns `{:ok, {

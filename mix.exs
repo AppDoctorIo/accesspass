@@ -19,7 +19,7 @@ defmodule AccessPass.Mixfile do
           "Crash Course": Path.wildcard("doc_extras/*.md")
         ]
       ],
-      version: "1.0.3",
+      version: "1.1.0",
       description:
         "Provides a full user authentication experience for an API. 
       Includes login,logout,register,forgot password, forgot username, confirmation email and all that other good stuff.

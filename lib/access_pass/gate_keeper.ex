@@ -35,6 +35,18 @@ defmodule AccessPass.GateKeeper do
     end
   end
 
+  def resend_confirm(username) do
+    case repo().get_by(Users, username: username) do
+      nil ->
+        {:error, "failed to find user"}
+      %AccessPass.Users{} = user ->
+        case Mail.send_confirmation_email(user.email, user.confirm_id) do
+          %Bamboo.Email{} -> {:ok, "confirmation email resent"}
+          {:error, _} -> {:error, "error sending email"}
+        end
+    end
+  end
+
   def translate_error({msg, opts}) do
     if count = opts[:count] do
       Gettext.dngettext(AccessPass.Gettext, "errors", msg, msg, count, opts)

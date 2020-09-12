@@ -28,6 +28,13 @@ defmodule AccessPass.Controller do
     end
   end
 
+  def resend_confirm(%{method: "POST"} = conn, _) do
+    case AccessPass.resend_confirm(getBodyValue(conn, "username")) do
+      {:ok, data} -> conn |> json(200, %{ok: data})
+      {:error, err} -> conn |> json(400, %{error: err})
+    end
+  end
+
   def confirm(%{method: "POST"} = conn, _) do
     case AccessPass.confirm(getBodyValue(conn, "confirm_id")) do
       {:ok, data} -> conn |> json(200, %{ok: data})
